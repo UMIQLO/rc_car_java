@@ -2,19 +2,20 @@ package moe.umiqlo.remotecontrol.util;
 
 import com.google.gson.Gson;
 
+
 public class Config {
-    private String VIDEO_URL;
+    private String CAMERA_URL;
     private String CONTROL_HOST;
     private int CONTROL_PORT;
     private int LEFT_MOTOR_SPEED;
     private int RIGHT_MOTOR_SPEED;
 
-    public String getVIDEO_URL() {
-        return VIDEO_URL;
+    public String getCAMERA_URL() {
+        return CAMERA_URL;
     }
 
-    public void setVIDEO_URL(String VIDEO_URL) {
-        this.VIDEO_URL = VIDEO_URL;
+    public void setCAMERA_URL(String CAMERA_URL) {
+        this.CAMERA_URL = CAMERA_URL;
     }
 
     public String getCONTROL_HOST() {

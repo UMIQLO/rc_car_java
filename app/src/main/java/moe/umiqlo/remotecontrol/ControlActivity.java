@@ -3,8 +3,6 @@ package moe.umiqlo.remotecontrol;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,11 +12,10 @@ import moe.umiqlo.remotecontrol.util.SimpleSocketClient;
 
 public class ControlActivity extends MainActivity implements View.OnTouchListener {
 
-    Button btnUp, btnDown, btnLeft, btnRight, btnStop;
+    Button btnUp, btnDown, btnLeft, btnRight, btnCapture, btnServoLeft, btnServoRight;
     SimpleSocketClient controlClient;
     Thread controlThread;
     Config config;
-    SurfaceView surfaceView;
     int screenWidth, screenHeight;
 
     @Override
@@ -38,8 +35,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                 case R.id.btnRight:
                     controlClient.send("MD_You");
                     break;
-                case R.id.btnStop:
-                    controlClient.send("MD_Ting");
+                case R.id.btnCapture:
+                case R.id.btnServoLeft:
+                case R.id.btnServoRight:
                     break;
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -52,6 +50,7 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
+
         config = loadFromSharedPreferences();
         initComponent();
     }
@@ -86,16 +85,20 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         btnDown = (Button) findViewById(R.id.btnDown);
         btnLeft = (Button) findViewById(R.id.btnLeft);
         btnRight = (Button) findViewById(R.id.btnRight);
-        btnStop = (Button) findViewById(R.id.btnStop);
-
-        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-
+        btnCapture = (Button) findViewById(R.id.btnCapture);
+        btnServoLeft = (Button) findViewById(R.id.btnServoLeft);
+        btnServoRight = (Button) findViewById(R.id.btnServoRight);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
         btnLeft.setOnTouchListener(this);
         btnRight.setOnTouchListener(this);
-        btnStop.setOnTouchListener(this);
+        btnCapture.setOnTouchListener(this);
+        btnServoLeft.setOnTouchListener(this);
+        btnServoRight.setOnTouchListener(this);
+
+        // setting emoji as capture button text
+        btnCapture.setText("\uD83D\uDCF7");
     }
 
     private void initControlConnection() {

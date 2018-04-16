@@ -9,9 +9,12 @@
     <string name="control">Control</string>
     <string name="preview">Preview</string>
     <string name="setting">Setting</string>
-    <string name="stop">Stop</string>
-    <string name="up">Up</string>
-    <string name="down">Down</string>
-    <string name="left">Left</string>
-    <string name="right">Right</string>
+    <string name="capture">\uD83D\uDCF7</string>
+    <string name="up">\u25B2</string>
+    <string name="down">\u25BC</string>
+    <string name="left">\u25C0</string>
+    <string name="right">\u25B6</string>
+    <string name="led">LED</string>
+    <string name="anti_clockwise">\u21B6</string>
+    <string name="clockwise">\u21b7</string>
 </resources>

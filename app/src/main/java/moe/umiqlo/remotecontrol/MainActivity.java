@@ -2,6 +2,7 @@ package moe.umiqlo.remotecontrol;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         System.out.println(sharedPreferences.getString("setting_json", "err_no_data"));
         initComponent();
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.config = gson.fromJson(setting_json, Config.class);
         } else {
             // if setting_json not existed, create new setting here
-            this.config.setVIDEO_URL("http://192.168.8.1:8083/?action=snapshot");
+            this.config.setCAMERA_URL("http://192.168.8.1:8083/?action=snapshot");
             this.config.setCONTROL_HOST("192.168.8.1");
             this.config.setCONTROL_PORT(8081);
             this.config.setLEFT_MOTOR_SPEED(255);

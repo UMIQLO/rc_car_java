@@ -9,6 +9,15 @@ import java.net.Socket;
 
 public class SimpleSocketClient implements Runnable {
 
+    private static final SimpleSocketClient ourInstance = new SimpleSocketClient();
+
+    public static SimpleSocketClient getInstance() {
+        return ourInstance;
+    }
+
+    private SimpleSocketClient() {
+    }
+
     private Socket socket;
     private BufferedReader br;
     private BufferedWriter bw;
@@ -49,7 +58,7 @@ public class SimpleSocketClient implements Runnable {
     public void receive() {
         try {
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while (socket.isConnected()) {
+            while (!socket.isClosed()) {
                 response = br.readLine();
                 if (response != null) {
                     System.out.println("-----Received-----");
@@ -67,10 +76,14 @@ public class SimpleSocketClient implements Runnable {
             System.out.println("--------Kill-------");
             //br.close();
             System.out.println("--------br Kill-------");
-            bw.close();
-            System.out.println("--------bw Kill-------");
+            if (bw != null) {
+                bw.close();
+                System.out.println("--------bw Kill-------");
+            }
+
             socket.close();
             System.out.println("--------socket Kill-------");
+
         } catch (Exception e) {
             e.printStackTrace();
             runFlag = false;

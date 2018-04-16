@@ -1,8 +1,10 @@
 package moe.umiqlo.remotecontrol;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,13 +13,14 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
 
 import moe.umiqlo.remotecontrol.util.Config;
 
 public class SettingActivity extends MainActivity implements View.OnClickListener {
 
     SharedPreferences sharedPreferences;
-    Config config = null;
+    Config config;
     EditText txtVideoUrl, txtControlHost, txtControlPort;
     SeekBar seekBarLeftMotor, seekBarRightMotor;
     TextView lbLeftSpeed, lbRightSpeed;
@@ -28,8 +31,10 @@ public class SettingActivity extends MainActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         setTitle("Configuration");
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        config = loadFromSharedPreferences();
+        config = super.loadFromSharedPreferences();
+        System.out.println("Setting:" + new Gson().toJson(config));
         initComponent();
         loadSettingToView();
     }
@@ -86,7 +91,7 @@ public class SettingActivity extends MainActivity implements View.OnClickListene
     }
 
     private void loadSettingToView() {
-        txtVideoUrl.setText(config.getVIDEO_URL());
+        txtVideoUrl.setText(config.getCAMERA_URL());
         txtControlHost.setText(config.getCONTROL_HOST());
         txtControlPort.setText(String.valueOf(config.getCONTROL_PORT()));
         seekBarLeftMotor.setProgress(config.getLEFT_MOTOR_SPEED());
@@ -95,13 +100,13 @@ public class SettingActivity extends MainActivity implements View.OnClickListene
 
     private void save() {
         // Create new config
-        Config newConfig = new Config();
-        newConfig.setVIDEO_URL(txtVideoUrl.getText().toString());
-        newConfig.setCONTROL_HOST(txtControlHost.getText().toString());
-        newConfig.setCONTROL_PORT(Integer.valueOf(txtControlPort.getText().toString()));
-        newConfig.setLEFT_MOTOR_SPEED(seekBarLeftMotor.getProgress());
-        newConfig.setRIGHT_MOTOR_SPEED(seekBarRightMotor.getProgress());
-        super.saveToSharedPreferences(newConfig);
+        //Config newConfig = Config.getInstance();
+        config.setCAMERA_URL(txtVideoUrl.getText().toString());
+        config.setCONTROL_HOST(txtControlHost.getText().toString());
+        config.setCONTROL_PORT(Integer.valueOf(txtControlPort.getText().toString()));
+        config.setLEFT_MOTOR_SPEED(seekBarLeftMotor.getProgress());
+        config.setRIGHT_MOTOR_SPEED(seekBarRightMotor.getProgress());
+        super.saveToSharedPreferences(config);
     }
 
     @Override
@@ -110,8 +115,8 @@ public class SettingActivity extends MainActivity implements View.OnClickListene
             case R.id.btnSave:
                 save();
                 new MaterialDialog.Builder(this)
-                        .title("OK")
-                        .content("Save OK")
+                        .title("Success")
+                        .content("Configuration Saved!")
                         .positiveText(android.R.string.ok)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override

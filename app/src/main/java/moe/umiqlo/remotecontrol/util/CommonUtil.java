@@ -1,5 +1,10 @@
 package moe.umiqlo.remotecontrol.util;
 
+import android.content.Context;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -16,4 +21,5 @@ public class CommonUtil {
     public static String getConsoleStyleMsg(String msg) {
         return getCurrentDateTimeStr() + " | " + msg + "\n";
     }
+
 }
