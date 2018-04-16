@@ -9,7 +9,6 @@ public class Config {
     private int LEFT_MOTOR_SPEED;
     private int RIGHT_MOTOR_SPEED;
 
-
     public String getVIDEO_URL() {
         return VIDEO_URL;
     }

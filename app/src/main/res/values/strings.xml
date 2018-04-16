@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Remote Control</string>
+    <string name="control_port">Control Port</string>
+    <string name="save">Save</string>
+    <string name="stream_video_url">Stream Video Url</string>
+    <string name="control_host">Control Host</string>
+    <string name="left_motor_speed">Left Motor Speed</string>
+    <string name="right_motor_speed">Right Motor Speed</string>
+    <string name="control">Control</string>
+    <string name="preview">Preview</string>
+    <string name="setting">Setting</string>
+    <string name="stop">Stop</string>
+    <string name="up">Up</string>
+    <string name="down">Down</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
 </resources>
