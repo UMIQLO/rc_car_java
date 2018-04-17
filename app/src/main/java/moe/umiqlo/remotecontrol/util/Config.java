@@ -1,53 +1,97 @@
 package moe.umiqlo.remotecontrol.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.google.gson.Gson;
 
 
 public class Config {
-    private String CAMERA_URL;
-    private String CONTROL_HOST;
-    private int CONTROL_PORT;
-    private int LEFT_MOTOR_SPEED;
-    private int RIGHT_MOTOR_SPEED;
 
-    public String getCAMERA_URL() {
-        return CAMERA_URL;
+    private static Config instance;
+
+    private Config() {
+        cameraUrl = "http://192.168.8.1:8083/?action=snapshot";
+        controlHost = "192.168.8.1";
+        controlPort = 2001;
+        leftMotorSpeed = 255;
+        rightMotorSpeed = 255;
+        lastAccess = "defaultSetting";
     }
 
-    public void setCAMERA_URL(String CAMERA_URL) {
-        this.CAMERA_URL = CAMERA_URL;
+    public static synchronized Config getInstance() {
+        if (instance == null) {
+            instance = new Config();
+        }
+        return instance;
     }
 
-    public String getCONTROL_HOST() {
-        return CONTROL_HOST;
+    public void setInstance() {
+        instance = this;
     }
 
-    public void setCONTROL_HOST(String CONTROL_HOST) {
-        this.CONTROL_HOST = CONTROL_HOST;
+    public void save(Context context) {
+        // save config to SharedPreferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("setting_json", this.toString());
+        editor.apply();
     }
 
-    public int getCONTROL_PORT() {
-        return CONTROL_PORT;
+    private String cameraUrl;
+    private String controlHost;
+    private int controlPort;
+    private int leftMotorSpeed;
+    private int rightMotorSpeed;
+    private String lastAccess;
+
+    public String getCameraUrl() {
+        return cameraUrl;
     }
 
-    public void setCONTROL_PORT(int CONTROL_PORT) {
-        this.CONTROL_PORT = CONTROL_PORT;
+    public void setCameraUrl(String cameraUrl) {
+        this.cameraUrl = cameraUrl;
     }
 
-    public int getLEFT_MOTOR_SPEED() {
-        return LEFT_MOTOR_SPEED;
+    public String getControlHost() {
+        return controlHost;
     }
 
-    public void setLEFT_MOTOR_SPEED(int LEFT_MOTOR_SPEED) {
-        this.LEFT_MOTOR_SPEED = LEFT_MOTOR_SPEED;
+    public void setControlHost(String controlHost) {
+        this.controlHost = controlHost;
     }
 
-    public int getRIGHT_MOTOR_SPEED() {
-        return RIGHT_MOTOR_SPEED;
+    public int getControlPort() {
+        return controlPort;
     }
 
-    public void setRIGHT_MOTOR_SPEED(int RIGHT_MOTOR_SPEED) {
-        this.RIGHT_MOTOR_SPEED = RIGHT_MOTOR_SPEED;
+    public void setControlPort(int controlPort) {
+        this.controlPort = controlPort;
+    }
+
+    public int getLeftMotorSpeed() {
+        return leftMotorSpeed;
+    }
+
+    public void setLeftMotorSpeed(int leftMotorSpeed) {
+        this.leftMotorSpeed = leftMotorSpeed;
+    }
+
+    public int getRightMotorSpeed() {
+        return rightMotorSpeed;
+    }
+
+    public void setRightMotorSpeed(int rightMotorSpeed) {
+        this.rightMotorSpeed = rightMotorSpeed;
+    }
+
+    public String getLastAccess() {
+        return lastAccess;
+    }
+
+    public void setLastAccess(String lastAccess) {
+        this.lastAccess = lastAccess;
     }
 
     @Override
