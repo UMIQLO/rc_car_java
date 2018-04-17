@@ -6,10 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".ControlActivity">
 
-    <moe.umiqlo.remotecontrol.util.CameraSurfaceView
+    <TextView
+        android:id="@+id/lbRightMotor"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/right_motor_speed"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarRightMotor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline9" />
 
+    <TextView
+        android:id="@+id/lbLeftMotor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/left_motor_speed"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarLeftMotor"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarLeftMotor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:max="255"
+        app:layout_constraintBottom_toTopOf="@+id/lbLeftSpeed"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarRightMotor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:max="255"
+        app:layout_constraintBottom_toTopOf="@+id/lbRightSpeed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline9" />
+
+    <TextView
+        android:id="@+id/lbLeftSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/switchLED"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/lbRightSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/switchLED"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="@+id/guideline9" />
 
     <Button
         android:id="@+id/btnCapture"
@@ -20,8 +86,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/capture"
         app:layout_constraintBottom_toTopOf="@+id/btnDown"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnUp"
@@ -32,8 +98,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/up"
         app:layout_constraintBottom_toTopOf="@+id/btnCapture"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnDown"
@@ -44,8 +110,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/down"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnLeft"
@@ -56,7 +122,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/left"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintEnd_toStartOf="@+id/btnCapture"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -71,21 +137,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline6" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="128dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="139dp" />
+        app:layout_constraintStart_toEndOf="@+id/btnCapture" />
 
     <Switch
         android:id="@+id/switchLED"
@@ -96,8 +148,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/led"
         app:layout_constraintBottom_toTopOf="@+id/btnUp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnServoLeft"
@@ -108,7 +160,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/anti_clockwise"
         app:layout_constraintBottom_toTopOf="@+id/btnLeft"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -121,6 +173,22 @@
         android:text="@string/clockwise"
         app:layout_constraintBottom_toTopOf="@+id/btnRight"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline6" />
+        app:layout_constraintStart_toStartOf="@+id/guideline9" />
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
 </android.support.constraint.ConstraintLayout>

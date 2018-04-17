@@ -6,13 +6,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import moe.umiqlo.remotecontrol.config.Config;
 
 public class CameraSurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback2 {
 
@@ -79,6 +80,7 @@ public class CameraSurfaceView extends SurfaceView implements Runnable, SurfaceH
             newWidth = (int) (ratio * imageWidth);
             newHeight = maxHeight;
         }
+
         return Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
     }
 
@@ -88,7 +90,7 @@ public class CameraSurfaceView extends SurfaceView implements Runnable, SurfaceH
         Bitmap image;
         InputStream inputStream;
         URL url = null;
-        String cameraUrl = "http://192.168.8.1:8083/?action=snapshot";
+        String cameraUrl = Config.getInstance().getCameraUrl();
         try {
             url = new URL(cameraUrl);
         } catch (Exception e) {

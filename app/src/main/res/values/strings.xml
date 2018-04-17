@@ -17,4 +17,12 @@
     <string name="led">LED</string>
     <string name="anti_clockwise">\u21B6</string>
     <string name="clockwise">\u21b7</string>
+    <string name="debug_setting">Debug Setting</string>
+    <string name="system_error">System Error</string>
+    <string name="error">Error</string>
+    <string name="screen_capture">Screen Capture</string>
+    <string name="screen_captured">Screen Captured</string>
+    <string name="success">Success</string>
+    <string name="storage_permission_problem">Storage Permission Problem</string>
+    <string name="capture_folder_name">Capture Folder Name</string>
 </resources>

@@ -9,15 +9,6 @@ import java.net.Socket;
 
 public class SimpleSocketClient implements Runnable {
 
-    private static final SimpleSocketClient ourInstance = new SimpleSocketClient();
-
-    public static SimpleSocketClient getInstance() {
-        return ourInstance;
-    }
-
-    private SimpleSocketClient() {
-    }
-
     private Socket socket;
     private BufferedReader br;
     private BufferedWriter bw;

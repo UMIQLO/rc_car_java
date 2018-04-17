@@ -1,4 +1,4 @@
-package moe.umiqlo.remotecontrol.util;
+package moe.umiqlo.remotecontrol.config;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +18,7 @@ public class Config {
         leftMotorSpeed = 255;
         rightMotorSpeed = 255;
         lastAccess = "defaultSetting";
+        captureFolderName = "RC_CAR_DCIM";
     }
 
     public static synchronized Config getInstance() {
@@ -45,6 +46,7 @@ public class Config {
     private int leftMotorSpeed;
     private int rightMotorSpeed;
     private String lastAccess;
+    private String captureFolderName;
 
     public String getCameraUrl() {
         return cameraUrl;
@@ -92,6 +94,14 @@ public class Config {
 
     public void setLastAccess(String lastAccess) {
         this.lastAccess = lastAccess;
+    }
+
+    public String getCaptureFolderName() {
+        return captureFolderName;
+    }
+
+    public void setCaptureFolderName(String captureFolderName) {
+        this.captureFolderName = captureFolderName;
     }
 
     @Override
