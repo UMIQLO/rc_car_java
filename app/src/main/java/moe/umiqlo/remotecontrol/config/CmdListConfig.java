@@ -20,6 +20,7 @@ public class CmdListConfig {
         cmdServoLeft = "ServoL";
         cmdServoRight = "ServoR";
         cmdLED = "LED";
+        cmdFPS = 40;
         lastAccess = "defaultSetting";
     }
 
@@ -51,6 +52,7 @@ public class CmdListConfig {
     private String cmdServoLeft;
     private String cmdServoRight;
     private String cmdLED;
+    private int cmdFPS;
     private String lastAccess;
 
     public String getCmdForward() {
@@ -131,6 +133,14 @@ public class CmdListConfig {
 
     public void setLastAccess(String lastAccess) {
         this.lastAccess = lastAccess;
+    }
+
+    public int getCmdFPS() {
+        return cmdFPS;
+    }
+
+    public void setCmdFPS(int cmdFPS) {
+        this.cmdFPS = cmdFPS;
     }
 
     @Override
