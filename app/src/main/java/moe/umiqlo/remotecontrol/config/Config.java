@@ -19,6 +19,7 @@ public class Config {
         rightMotorSpeed = 255;
         lastAccess = "defaultSetting";
         captureFolderName = "RC_CAR_DCIM";
+        fps = 40;
     }
 
     public static synchronized Config getInstance() {
@@ -47,6 +48,7 @@ public class Config {
     private int rightMotorSpeed;
     private String lastAccess;
     private String captureFolderName;
+    private int fps;
 
     public String getCameraUrl() {
         return cameraUrl;
