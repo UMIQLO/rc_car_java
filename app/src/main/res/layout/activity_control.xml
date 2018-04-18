@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="0"
+        android:text="@string/_0"
         app:layout_constraintBottom_toTopOf="@+id/switchLED"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintHorizontal_bias="0.461"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="0"
+        android:text="@string/_0"
         app:layout_constraintBottom_toTopOf="@+id/switchLED"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
@@ -190,5 +190,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
+
+    <Switch
+        android:id="@+id/switchSyncMotor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/sync"
+        app:layout_constraintBottom_toTopOf="@+id/switchLED"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
