@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">小车遥距控制</string>
+    <string name="control_port">控制端口</string>
+    <string name="save">储存</string>
+    <string name="stream_video_url">镜头串流接口</string>
+    <string name="control_host">控制位置</string>
+    <string name="left_motor_speed">左摩打速度</string>
+    <string name="right_motor_speed">右摩打速度</string>
+    <string name="control">控制</string>
+    <string name="setting">设定</string>
+    <string name="debug_setting">除错设定</string>
+    <string name="system_error">系统错误</string>
+    <string name="error">错误</string>
+    <string name="screen_capture">荧幕截图</string>
+    <string name="screen_captured">已截图</string>
+    <string name="success">成功</string>
+    <string name="storage_permission_problem">内部储存权限问题</string>
+    <string name="capture_folder_name">截图资料夹名称</string>
+    <string name="sync">同步</string>
+    <string name="configuration">配置</string>
+    <string name="car_remote_control">小车遥距控制</string>
+    <string name="debug_config">除错配置</string>
+    <string name="forward">前进</string>
+    <string name="backward">后退</string>
+    <string name="txt_left">左转</string>
+    <string name="txt_right">右转</string>
+    <string name="servo_right">镜头右</string>
+    <string name="led">LED</string>
+    <string name="speed">速度</string>
+    <string name="stop">停止</string>
+    <string name="servo_left">镜头左</string>
+    <string name="config_saved">成功储存</string>
+    <string name="update_config">连线失败! 请更新你的设定</string>
+    <string name="conn_failed">连线失败</string>
+    <string name="go">前往</string>
+    <string name="status_all_ok">镜头 - OK!\n车 - OK!</string>
+</resources>
