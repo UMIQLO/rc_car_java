@@ -1,6 +1,7 @@
 package moe.umiqlo.remotecontrol;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,7 +35,7 @@ import moe.umiqlo.remotecontrol.util.SimpleSocketClient;
 public class ControlActivity extends MainActivity implements View.OnTouchListener, SurfaceHolder.Callback2, Runnable {
 
     Button btnUp, btnDown, btnLeft, btnRight, btnCapture, btnServoLeft, btnServoRight;
-    Switch switchLED;
+    Switch switchLED, switchSyncMotor;
     SimpleSocketClient controlClient;
     Thread controlThread;
     SurfaceView cameraSurfaceView;
@@ -48,6 +49,7 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
     private HttpURLConnection conn;
     private Thread thread;
     private Bitmap captureImage;
+    private boolean syncMotor;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -67,6 +69,7 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                     controlClient.send(CmdListConfig.getInstance().getCmdRight());
                     break;
                 case R.id.btnCapture:
+                case R.id.surfaceView:
                     capture();
                     break;
                 case R.id.btnServoLeft:
@@ -86,11 +89,21 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
-        setTitle("Car Remote Control");
+        // change title
+        setTitle(getString(R.string.car_remote_control));
+        // lock device SCREEN_ORIENTATION
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // back button on action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initComponent();
         initScreenValue();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 
     @Override
     protected void onDestroy() {
@@ -130,6 +143,7 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         btnServoLeft = (Button) findViewById(R.id.btnServoLeft);
         btnServoRight = (Button) findViewById(R.id.btnServoRight);
         switchLED = (Switch) findViewById(R.id.switchLED);
+        switchSyncMotor = (Switch) findViewById(R.id.switchSyncMotor);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
@@ -139,8 +153,10 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         btnServoLeft.setOnTouchListener(this);
         btnServoRight.setOnTouchListener(this);
 
+
         screenValue();
         cameraSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        cameraSurfaceView.setOnTouchListener(this);
         holder = cameraSurfaceView.getHolder();
         holder.addCallback(this);
 
@@ -158,7 +174,18 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
             }
         });
 
-        // init SeekBar
+        switchSyncMotor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                syncMotor = isChecked;
+                if (seekBarLeftMotor.getProgress() > seekBarRightMotor.getProgress()) {
+                    seekBarRightMotor.setProgress(seekBarLeftMotor.getProgress());
+                } else {
+                    seekBarLeftMotor.setProgress(seekBarRightMotor.getProgress());
+                }
+            }
+        });
+
+        // init SeekBar (Motor)
         lbLeftSpeed = (TextView) findViewById(R.id.lbLeftSpeed);
         lbRightSpeed = (TextView) findViewById(R.id.lbRightSpeed);
         seekBarLeftMotor = (SeekBar) findViewById(R.id.seekBarLeftMotor);
@@ -169,6 +196,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                 lbLeftSpeed.setText(String.valueOf(progress));
                 Config.getInstance().setLeftMotorSpeed(progress);
                 Config.getInstance().save(ControlActivity.this);
+                if (syncMotor) {
+                    seekBarRightMotor.setProgress(progress);
+                }
             }
 
             @Override
@@ -187,6 +217,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                 lbRightSpeed.setText(String.valueOf(progress));
                 Config.getInstance().setRightMotorSpeed(progress);
                 Config.getInstance().save(ControlActivity.this);
+                if (syncMotor) {
+                    seekBarLeftMotor.setProgress(progress);
+                }
             }
 
             @Override
@@ -202,6 +235,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
 
         seekBarLeftMotor.setProgress(Config.getInstance().getLeftMotorSpeed());
         seekBarRightMotor.setProgress(Config.getInstance().getRightMotorSpeed());
+
+        // hidden capture button
+        btnCapture.setVisibility(View.INVISIBLE);
     }
 
     private void initControlConnection() {
@@ -323,6 +359,7 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                         holder.unlockCanvasAndPost(canvas);
                         conn.disconnect();
                     }
+                    Thread.sleep(CmdListConfig.getInstance().getCmdFPS());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
