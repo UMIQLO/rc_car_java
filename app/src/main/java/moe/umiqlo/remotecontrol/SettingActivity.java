@@ -3,11 +3,15 @@ package moe.umiqlo.remotecontrol;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,14 +21,18 @@ import moe.umiqlo.remotecontrol.config.Config;
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText txtVideoUrl, txtControlHost, txtControlPort, txtCaptureFolder;
-    Button btnSave;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        setTitle("Configuration");
+        // change title
+        setTitle(R.string.configuration);
+        // lock device SCREEN_ORIENTATION
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // back button on action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initComponent();
         loadSettingToView();
     }
@@ -35,10 +43,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         txtControlHost = (EditText) findViewById(R.id.txtControlHost);
         txtControlPort = (EditText) findViewById(R.id.txtControlPort);
         txtCaptureFolder = (EditText) findViewById(R.id.txtCaptureFolder);
-
-        // init onClickListener to Button(s)
-        btnSave = (Button) findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(this);
     }
 
     private void loadSettingToView() {
@@ -61,11 +65,33 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnSave:
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.btnMenuSave:
                 save();
                 new MaterialDialog.Builder(this)
-                        .title("Success")
-                        .content("Configuration Saved!")
+                        .title(R.string.success)
+                        .content(R.string.config_saved)
                         .positiveText(android.R.string.ok)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -74,7 +100,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         })
                         .show();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
