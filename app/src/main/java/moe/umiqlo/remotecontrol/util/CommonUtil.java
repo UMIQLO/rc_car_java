@@ -9,6 +9,10 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -70,6 +74,31 @@ public class CommonUtil {
             output.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public static boolean isURLConnectedToServer(String url, int timeout) {
+        try {
+            URL myUrl = new URL(url);
+            URLConnection connection = myUrl.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.connect();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isSocketConnectedToServer(String host, int port) {
+        try {
+            Socket socket = new Socket(host, port);
+            Boolean isConn = socket.isConnected();
+            socket.close();
+            return isConn;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

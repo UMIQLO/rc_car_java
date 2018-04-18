@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +14,8 @@ import com.google.gson.Gson;
 
 import moe.umiqlo.remotecontrol.config.CmdListConfig;
 import moe.umiqlo.remotecontrol.config.Config;
+import moe.umiqlo.remotecontrol.util.CommonUtil;
+import moe.umiqlo.remotecontrol.util.DebugMessage;
 
 import static moe.umiqlo.remotecontrol.util.CommonUtil.isExternalStorageReadable;
 import static moe.umiqlo.remotecontrol.util.CommonUtil.isExternalStorageWritable;
@@ -22,9 +23,10 @@ import static moe.umiqlo.remotecontrol.util.CommonUtil.isExternalStorageWritable
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnControl, btnPreview, btnSetting;
-    TextView txtDebugMsg;
+    static TextView txtDebugMsg;
     Config config;
     CmdListConfig cmd;
+    Boolean cameraConn, controlConn;
 
     @Override
     public void onClick(View v) {
@@ -46,8 +48,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        initSetting();
         initComponent();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initSetting();
+        initDebugMessage();
     }
 
     private void initComponent() {
@@ -84,11 +92,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Create new setting
             config.save(this);
         }
-        Log.v("Config", config.getInstance().toString());
-        Log.v("CmdConfig", cmd.getInstance().toString());
 
-        Log.v("Storage Read", isExternalStorageReadable() + "");
-        Log.v("Storage Write", isExternalStorageWritable() + "");
+        DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("Config: " + config.getInstance().toString()));
+        DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("CmdConfig: " + cmd.getInstance().toString()));
+        DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("isExternalStorageReadable: " + isExternalStorageReadable()));
+        DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("isExternalStorageWritable: " + isExternalStorageWritable()));
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cameraConn = CommonUtil.isURLConnectedToServer(Config.getInstance().getCameraUrl(), 100);
+                controlConn = CommonUtil.isSocketConnectedToServer(
+                        Config.getInstance().getControlHost(), Config.getInstance().getControlPort());
+                DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("Camera Connection: " + cameraConn + ""));
+                DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("Control Connection: " + controlConn + ""));
+            }
+        });
+    }
+
+    public static void initDebugMessage() {
+        txtDebugMsg.setText(""); //Clear Console
+        for (String msg : DebugMessage.getInstance().getMessage()) {
+            String oldMessage = txtDebugMsg.getText().toString();
+            txtDebugMsg.setText(msg + "\n" + oldMessage);
+        }
     }
 }
 

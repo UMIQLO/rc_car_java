@@ -10,7 +10,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import moe.umiqlo.remotecontrol.config.CmdListConfig;
-import moe.umiqlo.remotecontrol.util.CommonUtil;
 
 
 public class CmdConfigActivity extends AppCompatActivity implements View.OnClickListener {
@@ -88,6 +87,5 @@ public class CmdConfigActivity extends AppCompatActivity implements View.OnClick
         cmd.setCmdServoRight(txtCmdServoR.getText().toString());
         cmd.setCmdLED(txtCmdLED.getText().toString());
         cmd.save(this);
-        System.out.println(cmd.toString());
     }
 }
