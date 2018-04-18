@@ -1,16 +1,25 @@
 package moe.umiqlo.remotecontrol;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import moe.umiqlo.remotecontrol.config.CmdListConfig;
 import moe.umiqlo.remotecontrol.config.Config;
@@ -23,10 +32,10 @@ import static moe.umiqlo.remotecontrol.util.CommonUtil.isExternalStorageWritable
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnControl, btnPreview, btnSetting;
-    static TextView txtDebugMsg;
+    static TextView lbDebugMsg, lbAlert;
     Config config;
     CmdListConfig cmd;
-    Boolean cameraConn, controlConn;
+    private int count;
 
     @Override
     public void onClick(View v) {
@@ -39,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnSetting:
                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                break;
+            case R.id.lbDebugMsg:
+                count++;
+                if (count > 7) {
+                    lbDebugMsg.setTextColor(Color.parseColor("#FF000000"));
+                }
                 break;
         }
     }
@@ -56,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         initSetting();
         initDebugMessage();
+        checkConnection();
     }
 
     private void initComponent() {
@@ -65,7 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnControl.setOnClickListener(this);
         btnPreview.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
-        txtDebugMsg = (TextView) findViewById(R.id.txtDebugMsg);
+        lbDebugMsg = (TextView) findViewById(R.id.lbDebugMsg);
+        lbDebugMsg.setOnClickListener(this);
+        lbDebugMsg.setTextColor(Color.parseColor("#00000000")); // hidden debug message
+        lbAlert = (TextView) findViewById(R.id.lbAlert);
+
     }
 
     private void initSetting() {
@@ -97,25 +117,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("CmdConfig: " + cmd.getInstance().toString()));
         DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("isExternalStorageReadable: " + isExternalStorageReadable()));
         DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("isExternalStorageWritable: " + isExternalStorageWritable()));
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                cameraConn = CommonUtil.isURLConnectedToServer(Config.getInstance().getCameraUrl(), 100);
-                controlConn = CommonUtil.isSocketConnectedToServer(
-                        Config.getInstance().getControlHost(), Config.getInstance().getControlPort());
-                DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("Camera Connection: " + cameraConn + ""));
-                DebugMessage.getInstance().setMessage(CommonUtil.getConsoleStyleMsg("Control Connection: " + controlConn + ""));
-            }
-        });
     }
 
     public static void initDebugMessage() {
-        txtDebugMsg.setText(""); //Clear Console
+        lbDebugMsg.setText(""); //Clear Console
         for (String msg : DebugMessage.getInstance().getMessage()) {
-            String oldMessage = txtDebugMsg.getText().toString();
-            txtDebugMsg.setText(msg + "\n" + oldMessage);
+            String oldMessage = lbDebugMsg.getText().toString();
+            lbDebugMsg.setText(msg + "\n" + oldMessage);
         }
     }
+
+    private void checkConnection() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Boolean controlConn = CommonUtil.isSocketConnectedToServer(Config.getInstance().getControlHost(), Config.getInstance().getControlPort());
+                Boolean cameraConn = CommonUtil.isURLConnectedToServer(Config.getInstance().getCameraUrl(), 3000);
+                Map<String, Boolean> connection = new HashMap<>();
+                connection.put("control", controlConn);
+                connection.put("camera", cameraConn);
+                Message msg = Message.obtain();
+                msg.obj = connection;
+                mConnectionHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mConnectionHandler = new Handler() {
+        @SuppressLint("SetTextI18n")
+        public void handleMessage(Message msg) {
+            Map<String, Boolean> map = (HashMap) msg.obj;
+            Boolean controlConn = false, cameraConn = false;
+            for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+                if (entry.getKey().equals("control")) {
+                    controlConn = entry.getValue();
+                }
+                if (entry.getKey().equals("camera")) {
+                    cameraConn = entry.getValue();
+                }
+            }
+            if (cameraConn && controlConn) {
+                btnControl.setEnabled(true);
+                btnControl.setClickable(true);
+                lbAlert.setText(R.string.status_all_ok);
+            } else {
+                btnControl.setEnabled(false);
+                btnControl.setClickable(false);
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title(R.string.conn_failed)
+                        .content(R.string.update_config)
+                        .positiveText(R.string.go)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                lbAlert.setText(R.string.update_config);
+                                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                            }
+                        })
+                        .show();
+            }
+            initDebugMessage(); // Update Debug Message
+        }
+    };
 }
 
