@@ -1,6 +1,7 @@
 package moe.umiqlo.remotecontrol;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).start();
     }
 
-    @SuppressLint("HandlerLeak")
+
     private Handler mConnectionHandler = new Handler() {
         @SuppressLint("SetTextI18n")
         public void handleMessage(Message msg) {
@@ -164,18 +165,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 btnControl.setEnabled(false);
                 btnControl.setClickable(false);
-                new MaterialDialog.Builder(MainActivity.this)
-                        .title(R.string.conn_failed)
-                        .content(R.string.update_config)
-                        .positiveText(R.string.go)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                lbAlert.setText(R.string.update_config);
-                                startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                            }
-                        })
-                        .show();
+                try {
+                    new MaterialDialog.Builder(MainActivity.this)
+                            .title(R.string.conn_failed)
+                            .content(R.string.update_config)
+                            .positiveText(R.string.go)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    lbAlert.setText(R.string.update_config);
+                                    startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                                }
+                            })
+                            .show();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             initDebugMessage(); // Update Debug Message
         }
