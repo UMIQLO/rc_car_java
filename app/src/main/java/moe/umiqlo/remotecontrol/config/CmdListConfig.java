@@ -21,6 +21,8 @@ public class CmdListConfig {
         cmdServoRight = "ServoR";
         cmdLED = "LED";
         cmdFPS = 40;
+        cmdServoCentre = "ServoCenter";
+        cmdDistance = "Detection";
         lastAccess = "defaultSetting";
     }
 
@@ -52,8 +54,11 @@ public class CmdListConfig {
     private String cmdServoLeft;
     private String cmdServoRight;
     private String cmdLED;
+    private String cmdServoCentre;
     private int cmdFPS;
+    private String cmdDistance;
     private String lastAccess;
+
 
     public String getCmdForward() {
         return cmdForward;
@@ -141,6 +146,22 @@ public class CmdListConfig {
 
     public void setCmdFPS(int cmdFPS) {
         this.cmdFPS = cmdFPS;
+    }
+
+    public String getCmdServoCentre() {
+        return cmdServoCentre;
+    }
+
+    public void setCmdServoCentre(String cmdServoCentre) {
+        this.cmdServoCentre = cmdServoCentre;
+    }
+
+    public String getCmdDistance() {
+        return cmdDistance;
+    }
+
+    public void setCmdDistance(String cmdDistance) {
+        this.cmdDistance = cmdDistance;
     }
 
     @Override

@@ -19,7 +19,7 @@ import moe.umiqlo.remotecontrol.config.CmdListConfig;
 public class CmdConfigActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText txtCmdForward, txtCmdBackward, txtCmdLeft, txtCmdRight, txtCmdStop,
-            txtCmdSpeed, txtCmdServoL, txtCmdServoR, txtCmdLED, txtCmdFPS;
+            txtCmdSpeed, txtCmdServoL, txtCmdServoR, txtCmdLED, txtCmdFPS, txtCmdServoCentre, txtCmdDistance;
     CmdListConfig cmd;
 
     @Override
@@ -91,6 +91,8 @@ public class CmdConfigActivity extends AppCompatActivity implements View.OnClick
         txtCmdServoR.setText(CmdListConfig.getInstance().getCmdServoRight());
         txtCmdLED.setText(CmdListConfig.getInstance().getCmdLED());
         txtCmdFPS.setText(String.valueOf(CmdListConfig.getInstance().getCmdFPS()));
+        txtCmdServoCentre.setText(CmdListConfig.getInstance().getCmdServoCentre());
+        txtCmdDistance.setText(CmdListConfig.getInstance().getCmdDistance());
     }
 
     private void initComponent() {
@@ -104,6 +106,8 @@ public class CmdConfigActivity extends AppCompatActivity implements View.OnClick
         txtCmdServoR = findViewById(R.id.txtCmdServoR);
         txtCmdLED = findViewById(R.id.txtCmdLED);
         txtCmdFPS = findViewById(R.id.txtCmdFPS);
+        txtCmdServoCentre = findViewById(R.id.txtCmdServoCentre);
+        txtCmdDistance = findViewById(R.id.txtCmdDistance);
     }
 
     private void save() {
@@ -118,6 +122,8 @@ public class CmdConfigActivity extends AppCompatActivity implements View.OnClick
         cmd.setCmdServoRight(txtCmdServoR.getText().toString());
         cmd.setCmdLED(txtCmdLED.getText().toString());
         cmd.setCmdFPS(Integer.valueOf(txtCmdFPS.getText().toString()));
+        cmd.setCmdServoCentre(txtCmdServoCentre.getText().toString());
+        cmd.setCmdDistance(txtCmdDistance.getText().toString());
         cmd.save(this);
     }
 }
