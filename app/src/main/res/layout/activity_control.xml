@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline9" />
 
     <Button
-        android:id="@+id/btnCapture"
+        android:id="@+id/btnServoCentre"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
@@ -97,7 +97,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/up"
-        app:layout_constraintBottom_toTopOf="@+id/btnCapture"
+        app:layout_constraintBottom_toTopOf="@+id/btnServoCentre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -122,7 +122,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/left"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnCapture"
+        app:layout_constraintEnd_toStartOf="@+id/btnServoCentre"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -137,7 +137,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/btnCapture" />
+        app:layout_constraintStart_toEndOf="@+id/btnServoCentre" />
 
     <Switch
         android:id="@+id/switchLED"
@@ -201,6 +201,31 @@
         android:text="@string/sync"
         app:layout_constraintBottom_toTopOf="@+id/switchLED"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/lbDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/distance"
+        app:layout_constraintBottom_toTopOf="@+id/switchSyncMotor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnCheckDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/distance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnDown"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
