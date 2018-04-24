@@ -44,4 +44,6 @@
     <string name="conn_failed">Connection Failed</string>
     <string name="go">GO</string>
     <string name="status_all_ok">Camera - OK!\nCar - OK!</string>
+    <string name="servo_centre">Servo Centre</string>
+    <string name="distance">Distance</string>
 </resources>

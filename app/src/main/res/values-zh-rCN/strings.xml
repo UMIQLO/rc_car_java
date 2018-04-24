@@ -35,4 +35,5 @@
     <string name="conn_failed">连线失败</string>
     <string name="go">前往</string>
     <string name="status_all_ok">镜头 - OK!\n车 - OK!</string>
+    <string name="distance">距離</string>
 </resources>
