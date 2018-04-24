@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -28,19 +29,20 @@ import java.net.URL;
 
 import moe.umiqlo.remotecontrol.config.CmdListConfig;
 import moe.umiqlo.remotecontrol.config.Config;
+import moe.umiqlo.remotecontrol.util.CarResponse;
 import moe.umiqlo.remotecontrol.util.CommonUtil;
 import moe.umiqlo.remotecontrol.util.SimpleSocketClient;
 
 
 public class ControlActivity extends MainActivity implements View.OnTouchListener, SurfaceHolder.Callback2, Runnable {
 
-    Button btnUp, btnDown, btnLeft, btnRight, btnCapture, btnServoLeft, btnServoRight;
+    Button btnUp, btnDown, btnLeft, btnRight, btnServoCentre, btnServoLeft, btnServoRight, btnCheckDistance;
     Switch switchLED, switchSyncMotor;
     SimpleSocketClient controlClient;
     Thread controlThread;
     SurfaceView cameraSurfaceView;
     SeekBar seekBarLeftMotor, seekBarRightMotor;
-    TextView lbLeftSpeed, lbRightSpeed;
+    TextView lbLeftSpeed, lbRightSpeed, lbDistance;
 
     SurfaceHolder holder;
     int screenWidth, screenHeight;
@@ -68,7 +70,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                 case R.id.btnRight:
                     controlClient.send(CmdListConfig.getInstance().getCmdRight());
                     break;
-                case R.id.btnCapture:
+                case R.id.btnServoCentre:
+                    controlClient.send(CmdListConfig.getInstance().getCmdServoCentre());
+                    break;
                 case R.id.surfaceView:
                     capture();
                     break;
@@ -77,6 +81,12 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
                     break;
                 case R.id.btnServoRight:
                     controlClient.send(CmdListConfig.getInstance().getCmdServoRight());
+                    break;
+                case R.id.btnCheckDistance:
+                    controlClient.send(CmdListConfig.getInstance().getCmdDistance());
+                    String hint = this.getString(R.string.distance);
+                    System.out.println(hint + ": " + CarResponse.getInstance().getDisplayDistance());
+                    lbDistance.setText(hint + ": " + CarResponse.getInstance().getDisplayDistance());
                     break;
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -95,6 +105,9 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // back button on action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         initComponent();
         initScreenValue();
     }
@@ -139,19 +152,22 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         btnDown = (Button) findViewById(R.id.btnDown);
         btnLeft = (Button) findViewById(R.id.btnLeft);
         btnRight = (Button) findViewById(R.id.btnRight);
-        btnCapture = (Button) findViewById(R.id.btnCapture);
+        btnServoCentre = (Button) findViewById(R.id.btnServoCentre);
         btnServoLeft = (Button) findViewById(R.id.btnServoLeft);
         btnServoRight = (Button) findViewById(R.id.btnServoRight);
         switchLED = (Switch) findViewById(R.id.switchLED);
         switchSyncMotor = (Switch) findViewById(R.id.switchSyncMotor);
+        lbDistance = (TextView) findViewById(R.id.lbDistance);
+        btnCheckDistance = (Button) findViewById(R.id.btnCheckDistance);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
         btnLeft.setOnTouchListener(this);
         btnRight.setOnTouchListener(this);
-        btnCapture.setOnTouchListener(this);
+        btnServoCentre.setOnTouchListener(this);
         btnServoLeft.setOnTouchListener(this);
         btnServoRight.setOnTouchListener(this);
+        btnCheckDistance.setOnTouchListener(this);
 
 
         screenValue();
@@ -160,16 +176,18 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
         holder = cameraSurfaceView.getHolder();
         holder.addCallback(this);
 
-        // setting emoji as capture button text
-        btnCapture.setText("\uD83D\uDCF7");
+        // setting emoji as capture button text U+1f504
+        btnServoCentre.setText("\uD83D\uDD04");
 
         // init switch
         switchLED.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     Toast.makeText(ControlActivity.this, "LED On", Toast.LENGTH_SHORT).show();
+                    controlClient.send(CmdListConfig.getInstance().getCmdLED() + " 1");
                 } else {
                     Toast.makeText(ControlActivity.this, "LED Off", Toast.LENGTH_SHORT).show();
+                    controlClient.send(CmdListConfig.getInstance().getCmdLED() + " 0");
                 }
             }
         });
@@ -235,9 +253,6 @@ public class ControlActivity extends MainActivity implements View.OnTouchListene
 
         seekBarLeftMotor.setProgress(Config.getInstance().getLeftMotorSpeed());
         seekBarRightMotor.setProgress(Config.getInstance().getRightMotorSpeed());
-
-        // hidden capture button
-        btnCapture.setVisibility(View.INVISIBLE);
     }
 
     private void initControlConnection() {
