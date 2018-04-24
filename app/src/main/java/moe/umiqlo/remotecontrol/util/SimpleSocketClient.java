@@ -1,11 +1,15 @@
 package moe.umiqlo.remotecontrol.util;
 
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
+import moe.umiqlo.remotecontrol.config.Config;
 
 public class SimpleSocketClient implements Runnable {
 
@@ -55,6 +59,13 @@ public class SimpleSocketClient implements Runnable {
                     System.out.println("-----Received-----");
                     System.out.println(response);
                     System.out.println("--------END-------");
+
+                    // set Response to CarResponse Object
+                    CarResponse carResponse;
+                    carResponse = CarResponse.getInstance();
+                    carResponse = new Gson().fromJson(response, CarResponse.class);
+                    carResponse.setInstance(); // use gson deserialized class to replace
+                    System.out.println("FromJson = " + carResponse.toString());
                 }
             }
         } catch (Exception ex) {
